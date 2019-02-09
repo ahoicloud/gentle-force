@@ -31,10 +31,10 @@ class Throttler implements ThrottlerInterface
     {
         $rateLimits = $this->rateLimitProvider->getRateLimits($useCaseKey);
         $key = $this->buildKey($useCaseKey, $identifier);
-
+        $microtime = str_replace(",", ".", microtime(true));
         /** @var CheckAndIncreaseResult $redisResult */
         $redisResult = $this->client->executeCommand(
-            new CheckAndIncreaseCommand($key, $rateLimits, microtime(true))
+            new CheckAndIncreaseCommand($key, $rateLimits, $microtime)
         );
 
         if ($redisResult->isLimitReached()) {
